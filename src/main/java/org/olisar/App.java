@@ -6,6 +6,7 @@ import org.olisar.math.IOperation;
 import org.olisar.math.OperationFactory;
 import org.olisar.printer.ConsolePrinter;
 import org.olisar.printer.IPrinter;
+import org.olisar.printer.PdfPrinter;
 import org.olisar.settings.PropertiesSetting;
 
 import java.io.BufferedReader;
@@ -43,6 +44,7 @@ public class App
 //                    .forEach(System.out::println);
 
 
+//            IPrinter printer = new PdfPrinter();
             IPrinter printer = new ConsolePrinter();
             printer.printAlphabetToNumbers(mapper);
             printer.printExercises(operations);
