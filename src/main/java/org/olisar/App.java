@@ -7,14 +7,19 @@ import org.olisar.math.OperationFactory;
 import org.olisar.printer.PdfPrinter;
 import org.olisar.settings.PropertiesSetting;
 
+import javax.swing.*;
+import javax.swing.filechooser.FileFilter;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 
-public class App  extends javax.swing.JFrame {
+public class App  extends JFrame {
 
-    private javax.swing.JLabel generationResult;
-    private javax.swing.JTextField sentenceInput;
+    private JLabel generationResult;
+    private JTextField sentenceInput;
+    private JTextField pdfInput;
 
     /**
      * @param args the command line arguments
@@ -35,10 +40,14 @@ public class App  extends javax.swing.JFrame {
     }
 
     private void initComponents() {
-        sentenceInput = new javax.swing.JTextField();
-        javax.swing.JLabel sentenceLabel = new javax.swing.JLabel();
-        javax.swing.JButton generateButton = new javax.swing.JButton();
-        generationResult = new javax.swing.JLabel();
+        sentenceInput = new JTextField();
+        pdfInput = new JTextField();
+        JLabel sentenceLabel = new JLabel();
+        JButton generateButton = new JButton();
+        generationResult = new JLabel();
+
+        JLabel pdfLabel = new JLabel();
+        JButton pdfButton = new JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setTitle("Generátor příkladů");
@@ -49,20 +58,34 @@ public class App  extends javax.swing.JFrame {
         generateButton.setText("Vygeneruj příklad");
         generateButton.addActionListener(this::convertButtonActionPerformed);
 
-        javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
+        pdfLabel.setText("Adresář, kde bude PDF vytvořeno");
+        pdfLabel.setHorizontalAlignment(0);
+
+        pdfButton.setText("Vyber adresář");
+        pdfButton.addActionListener(this::pickDirectory);
+
+        GroupLayout layout = new GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                                         .addGroup(layout.createSequentialGroup()
-                                                .addComponent(sentenceInput, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(pdfInput, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(pdfLabel))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(pdfButton)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(pdfLabel))
+                                        .addGroup(layout.createSequentialGroup()
+                                                .addComponent(sentenceInput, GroupLayout.PREFERRED_SIZE, 300, GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(sentenceLabel))
                                         .addGroup(layout.createSequentialGroup()
                                                 .addComponent(generateButton)
-                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
                                                 .addComponent(generationResult)))
                                 .addContainerGap(100, Short.MAX_VALUE))
         );
@@ -70,14 +93,22 @@ public class App  extends javax.swing.JFrame {
         layout.linkSize(javax.swing.SwingConstants.HORIZONTAL, sentenceInput, generateButton);
 
         layout.setVerticalGroup(
-                layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                layout.createParallelGroup(GroupLayout.Alignment.LEADING)
                         .addGroup(layout.createSequentialGroup()
                                 .addContainerGap()
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                        .addComponent(sentenceInput, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(pdfInput, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(pdfLabel))
+                                .addGroup(layout.createSequentialGroup()
+                                        .addComponent(pdfButton)
+                                        .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(pdfLabel))
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
+                                        .addComponent(sentenceInput, GroupLayout.PREFERRED_SIZE, GroupLayout.DEFAULT_SIZE, GroupLayout.PREFERRED_SIZE)
                                         .addComponent(sentenceLabel))
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addPreferredGap(LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(layout.createParallelGroup(GroupLayout.Alignment.BASELINE)
                                         .addComponent(generateButton)
                                         .addComponent(generationResult))
                                 .addContainerGap(100, Short.MAX_VALUE))
@@ -85,7 +116,36 @@ public class App  extends javax.swing.JFrame {
         pack();
     }
 
-    private void convertButtonActionPerformed(java.awt.event.ActionEvent evt)
+    private void pickDirectory(ActionEvent actionEvent) {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setCurrentDirectory(new java.io.File("."));
+        chooser.setDialogTitle("Vyber složku nebo sobour");
+        chooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+        chooser.addChoosableFileFilter(new FileFilter() {
+            @Override
+            public boolean accept(File f) {
+                if (f.isDirectory()) {
+                    return true;
+                } else {
+                    return f.getName().toLowerCase().endsWith(".pdf");
+                }
+            }
+
+            @Override
+            public String getDescription() {
+                return "PDF dokumenty (*.pdf)";
+            }
+        });
+        chooser.showSaveDialog(null);
+
+        try {
+            this.pdfInput.setText(chooser.getSelectedFile().getAbsolutePath());
+        } catch (NullPointerException e) {
+            System.out.println("Nebyl vybran zadny adresar");
+        }
+    }
+
+    private void convertButtonActionPerformed(ActionEvent evt)
     {
         String[] sentence = sentenceInput.getText().toUpperCase().split("");
 
@@ -108,10 +168,10 @@ public class App  extends javax.swing.JFrame {
         new PdfPrinter.PdfPrinterBuilder()
                 .setAlphabetToNumbers(mapper)
                 .setExercises(operations)
-                .setPdfPath("f://priklady.pdf")
+                .setPdfPath(pdfInput.getText())
                 .build();
 
-        generationResult.setText("PDF bylo úspěšně vygenerováno do souboru: f://priklady.pdf");
+        generationResult.setText("PDF bylo úspěšně vygenerováno do souboru: " + pdfInput.getText());
     }
 
 }
