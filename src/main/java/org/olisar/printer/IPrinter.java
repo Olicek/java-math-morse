@@ -1,15 +1,16 @@
 package org.olisar.printer;
 
+import com.itextpdf.text.DocumentException;
 import org.olisar.mapper.IMapper;
 import org.olisar.math.IOperation;
 
-import java.util.Set;
+import java.util.List;
 
 public interface IPrinter {
 
-    void printAlphabetToNumbers(IMapper mapper);
+    void printAlphabetToNumbers(IMapper mapper) throws DocumentException;
 
-    void printExercises(Set<IOperation> operations);
+    void printExercises(List<IOperation> operations) throws DocumentException;
 
     void printSentence(String sentence);
 }

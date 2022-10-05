@@ -3,7 +3,8 @@ package org.olisar.printer;
 import org.olisar.mapper.IMapper;
 import org.olisar.math.IOperation;
 
-import java.util.Set;
+import java.util.List;
+
 
 public class ConsolePrinter implements IPrinter {
 
@@ -15,7 +16,7 @@ public class ConsolePrinter implements IPrinter {
     }
 
     @Override
-    public void printExercises(Set<IOperation> operations)
+    public void printExercises(List<IOperation> operations)
     {
         operations.forEach(
                 (v) -> System.out.println(v.getFirstNumber() + " " + v.sign() + " " + v.getSecondNumber() + " = " + v.getResult())

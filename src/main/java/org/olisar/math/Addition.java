@@ -12,9 +12,7 @@ public class Addition implements IOperation {
 
     public Addition(int result) {
         this.result = result;
-        //         TODO: Nahradit za nastaveni pro nejmensi a nejvetsi mozne cislo
-        this.firstNumber = ThreadLocalRandom.current().nextInt(0, 100 + 1);
-
+        this.firstNumber = ThreadLocalRandom.current().nextInt(0, result + 1);
         this.secondNumber = this.result - firstNumber;
     }
 

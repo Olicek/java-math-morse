@@ -10,14 +10,11 @@ public class Subtraction implements IOperation {
 
     private final int secondNumber;
 
-    public Subtraction(int result) {
+    public Subtraction(int maxLimit, int result) {
         this.result = result;
 
         // TODO: Nastaveni toho, jestli je nastaveni pro pocet cislic v mensiteli
         int maxSecondNumberDigits = 99;
-
-        // TODO: Nasatvit maximalni limit
-        int maxLimit = 100;
 
         int secondNumberCandidate = maxLimit - result;
 
