@@ -82,7 +82,7 @@ public class Console
     }
 
     private static String[] introduction() throws IOException {
-        System.out.println("Zadej větu, ze které se má sestavit příklad:");
+        System.out.println("Zadej text, ze kterého se má sestavit příklad:");
         BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
         return reader.readLine().toUpperCase().split("");
